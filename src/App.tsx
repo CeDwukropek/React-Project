@@ -1,33 +1,17 @@
-import React, { useState } from 'react';
 import './App.css';
-import { useTasks } from './useTasks';
-import { Task } from './Task';
-import {v4 as uuid} from 'uuid'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Main } from './Components/Main';
+import { Login } from './Components/Login';
 
 function App() {
-  const {tasks, addTask, removeTask, completeTask} = useTasks();
-  const [toDoVal, setTasks] = useState<string>("")
-
-  let ID = uuid()
-
   return (
     <div className="App">
-      {tasks.map((item) => (
-        <Task
-          id={item.id}
-          value={item.value}
-          completed={item.completed}
-          delete={() => removeTask(item)}
-          complete={() => completeTask(item)}
-        />
-      ))}
-      <div>
-        <input type='text' value={toDoVal} onChange={e => setTasks(e.target.value)} />
-        <button onClick={() => {
-            addTask({id: ID, value: toDoVal, completed: false})
-            setTasks("")
-          }}>Add</button>
-      </div>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Main />}/>
+          <Route path='/Login' element={<Login />}/>
+        </Routes>
+      </Router>
     </div>
   );
 }
