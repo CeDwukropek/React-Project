@@ -1,5 +1,4 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 import { useTasks } from './useTasks';
 import { Task } from './Task';
@@ -7,6 +6,7 @@ import {v4 as uuid} from 'uuid'
 
 function App() {
   const {tasks, addTask, removeTask, completeTask} = useTasks();
+  const [toDoVal, setTasks] = useState<string>("")
 
   let ID = uuid()
 
@@ -21,7 +21,13 @@ function App() {
           complete={() => completeTask(item)}
         />
       ))}
-      <button onClick={() => addTask({id: ID, value: "Test" + ID, completed: false})}>Add</button>
+      <div>
+        <input type='text' value={toDoVal} onChange={e => setTasks(e.target.value)} />
+        <button onClick={() => {
+            addTask({id: ID, value: toDoVal, completed: false})
+            setTasks("")
+          }}>Add</button>
+      </div>
     </div>
   );
 }
