@@ -2,8 +2,21 @@ import { useState } from "react";
 import { useTasks } from "../Hooks/useTasks";
 import { Task } from "./Task";
 import {v4 as uuid} from 'uuid'
+import {useNavigate} from "react-router-dom";
+import { getAuth } from "firebase/auth";
+
 
 export const Main = () => {
+  const navigate = useNavigate()
+
+  const auth = getAuth()
+  const user = auth.currentUser;
+
+  if(!user) {
+    console.log("not logged")
+    navigate('/')
+  }
+
   const {tasks, addTask, removeTask, completeTask} = useTasks();
   const [toDoVal, setTasks] = useState<string>("")
 

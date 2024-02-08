@@ -2,14 +2,16 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Main } from './Components/Main';
 import { Login } from './Components/Login';
+import { Navbar } from './Components/nav';
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <Navbar />
         <Routes>
-          <Route path='/' element={<Main />}/>
-          <Route path='/Login' element={<Login />}/>
+          <Route path='/' element={<Login />} />
+          <Route path='/Main' element={<Main />}/>
         </Routes>
       </Router>
     </div>
