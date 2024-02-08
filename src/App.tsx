@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
-import { useTasks } from './useTasks';
-import { Task } from './Task';
+import { useTasks } from './hooks/useTasks';
+import { Task } from './components/Task';
 import {v4 as uuid} from 'uuid'
 
 function App() {
