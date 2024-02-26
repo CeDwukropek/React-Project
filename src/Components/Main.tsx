@@ -24,6 +24,7 @@ export const Main = () => {
 
   return(
     <>
+    <div className="shadow"></div>
     {tasks.map((item) => (
         <Task
           id={item.id}
@@ -33,12 +34,12 @@ export const Main = () => {
           complete={() => completeTask(item)}
         />
       ))}
-      <div>
+      <div className="task">
         <input type='text' value={toDoVal} onChange={e => setTasks(e.target.value)} />
-        <button onClick={() => {
+        <button className="button" onClick={() => {
             addTask({id: ID, value: toDoVal, completed: false})
             setTasks("")
-          }}>Add</button>
+          }}>Create</button>
       </div>
     </>
   )
