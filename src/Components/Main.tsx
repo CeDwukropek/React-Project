@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTasks } from "../Hooks/useTasks";
 import { Task } from "./Task";
 import {v4 as uuid} from 'uuid'
@@ -8,7 +8,6 @@ import { getAuth } from "firebase/auth";
 
 export const Main = () => {
   const navigate = useNavigate()
-
   const auth = getAuth()
   const user = auth.currentUser;
 
@@ -25,22 +24,26 @@ export const Main = () => {
   return(
     <>
     <div className="shadow"></div>
-    {tasks.map((item) => (
-        <Task
-          id={item.id}
-          value={item.value}
-          completed={item.completed}
-          delete={() => removeTask(item)}
-          complete={() => completeTask(item)}
-        />
-      ))}
-      <div className="task">
+    <div className="bodyContainer">
+      <div className="taskForm">
         <input type='text' value={toDoVal} onChange={e => setTasks(e.target.value)} />
         <button className="button" onClick={() => {
-            addTask({id: ID, value: toDoVal, completed: false})
-            setTasks("")
-          }}>Create</button>
+              addTask({id: ID, value: toDoVal, completed: false})
+              setTasks("")
+            }}>Create</button>
       </div>
+      <div className="tasksContainer">
+        {tasks.map((item) => (
+            <Task
+              id={item.id}
+              value={item.value}
+              completed={item.completed}
+              delete={() => removeTask(item)}
+              complete={() => completeTask(item)}
+            />
+          ))}
+      </div>
+    </div>
     </>
   )
 }

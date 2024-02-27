@@ -1,4 +1,5 @@
-
+import Cross from '../images/cross-small.svg';
+import Check from '../images/check.svg';
 
 export type Task = {
     id: string
@@ -13,11 +14,11 @@ type TaskComponent = {
 
 export const Task = (props: TaskComponent) => {
     return(
-        <div className="task">
-            <div key={props.id} className={props.completed ? "completed" : ""}>
-                <p>{props.value}</p>
-                <button onClick={props.delete}>Remove</button>
-                <button onClick={props.complete}>Complete</button>
+        <div key={props.id} className={`task ${props.completed ? "completed" : ""}`}>
+            <p>{props.value}</p>
+            <div className="container">
+                <button className="button remove" onClick={props.delete}><img src={Cross} alt="My Icon" className='icon' /></button>
+                <button className="button complete" onClick={props.complete}><img src={Check} alt="My Icon" className='icon' /></button>
             </div>
         </div>
     )

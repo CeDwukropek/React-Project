@@ -19,6 +19,48 @@ body{
   position: relative;
 }
 
+.bodyContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 0 200px;
+}
+
+.tasksContainer {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+  padding: 0 200px;
+}
+
+.taskForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 1px solid rgba(233, 56, 134, .3);
+  border-radius:32px;
+  padding: 10px;
+  gap: 10px;
+  max-width: 300px;
+}
+
+.taskForm input {
+  grid-column: span 2;
+  background: transparent;
+  border: 1px solid rgba(233, 56, 134, .3);
+  outline: var(--accent) ;
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 18px 4px 4px 18px;
+}
+
+.taskForm input:focus {
+  border: 1px solid rgba(233, 56, 134, 1);
+}
+
+.taskForm .button {
+  border-radius: 4px 18px 18px 4px;
+}
+
 .App{
   text-align: center;
 }
@@ -31,15 +73,44 @@ body .shadow {
   width: var(--radius);
   height: var(--radius);
   background: radial-gradient(circle, rgba(233, 56, 134, .3) 0%, rgba(255,0,111,0) 70%);
+  pointer-events: none;
 }
 
 .button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: .5rem 1rem;
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: var(--accent);
   border: 0;
   color: var(--text);
   cursor: pointer;
+}
+
+.button.remove {
+  --color: rgba(233, 56, 134, 1);
+  background: transparent;
+  border: 1px solid var(--color);
+}
+
+.button.remove:hover {
+  background-color: var(--color);
+}
+
+.button.complete {
+  --color: rgba(33, 230, 121);
+  background: transparent;
+  border: 1px solid var(--color);
+}
+
+.button.complete:hover {
+  background-color: var(--color);
+}
+
+
+.icon {
+  width: 16px;
 }
 
 .navbar{
@@ -83,6 +154,25 @@ body .shadow {
 }
 
 .task {
+  border-radius: 16px;
   background-color: rgba(28, 8, 17, .3);
-  border: 1px solid var(--accent);
+  border: 1px solid rgba(233, 56, 134, .3);
+  padding-top: 20px ;
+}
+
+.task .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.task .container .button:nth-child(1) {
+  border-radius: 0 0 0 16px;
+}
+
+.task .container .button:nth-child(2) {
+  border-radius: 0 0 16px 0 ;
+}
+
+.task p {
+  margin-top: 0;
 }
