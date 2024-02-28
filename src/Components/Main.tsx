@@ -1,42 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTasks } from "../Hooks/useTasks";
 import { Task } from "./Task";
 import {v4 as uuid} from 'uuid'
 import {useNavigate} from "react-router-dom";
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from "firebase/auth";
+import { Navbar } from '../Components/Nav';
+import { CollectionReference, DocumentData, addDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "../Config/firebase";
+import * as yup from "yup";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {useForm} from "react-hook-form";
 
+interface CreateFormData {
+  description: string
+}
 
 export const Main = () => {
   const navigate = useNavigate()
   const auth = getAuth()
-  const user = auth.currentUser;
+  const [user] = useAuthState(auth);
 
   if(!user) {
     console.log("not logged")
     navigate('/')
   }
 
-  const {tasks, addTask, removeTask, completeTask} = useTasks();
+  const {addTask, removeTask, completeTask} = useTasks();
   const [toDoVal, setTasks] = useState<string>("")
-
   let ID = uuid()
+  const [tasksList, setTasksList] = useState<Task[] | null>(null)
+  const tasksRef = collection(db, "todos");
+
+  const schema = yup.object().shape({
+      description: yup.string().min(1).required("You must add a description")
+  });
+
+  const {register, handleSubmit, formState: {errors}} = useForm<CreateFormData>({
+      resolver: yupResolver(schema),
+  })
+
+  const onCreateTask = async (data: CreateFormData) => {
+      await addDoc(tasksRef, {
+          ...data,
+          userId: user?.uid,
+      })
+      console.log("created  ")
+  }
+  
+  const getTasks = async () => {
+      const data = await getDocs(tasksRef)
+      setTasksList(
+          data.docs.map((doc) => ({...doc.data(), id: doc.id})) as Task[]
+      )
+  }
+  useEffect(() => {
+      getTasks()
+  }, [tasksList])
+
 
   return(
     <>
+    <Navbar/> 
     <div className="shadow"></div>
     <div className="bodyContainer">
-      <div className="taskForm">
+      <form className="taskForm" onSubmit={handleSubmit(onCreateTask)}>
         <input type='text' value={toDoVal} onChange={e => setTasks(e.target.value)} />
-        <button className="button" onClick={() => {
-              addTask({id: ID, value: toDoVal, completed: false})
+        <button type="submit" className="button" onClick={() => {
+              addTask({id: ID, description: toDoVal, completed: false})
               setTasks("")
             }}>Create</button>
-      </div>
+      </form>
       <div className="tasksContainer">
-        {tasks.map((item) => (
+        {tasksList?.map((item) => (
             <Task
               id={item.id}
-              value={item.value}
+              description={item.description}
               completed={item.completed}
               delete={() => removeTask(item)}
               complete={() => completeTask(item)}
@@ -47,3 +86,4 @@ export const Main = () => {
     </>
   )
 }
+
