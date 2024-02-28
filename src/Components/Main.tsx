@@ -43,9 +43,12 @@ export const Main = () => {
   const onCreateTask = async (data: CreateFormData) => {
       await addDoc(tasksRef, {
           ...data,
+          completed: false,
           userId: user?.uid,
       })
-      console.log("created  ")
+
+      let form = document.getElementsByTagName("form")[0]
+      form.reset()
   }
   
   const getTasks = async () => {
@@ -65,7 +68,7 @@ export const Main = () => {
     <div className="shadow"></div>
     <div className="bodyContainer">
       <form className="taskForm" onSubmit={handleSubmit(onCreateTask)}>
-        <input type='text' value={toDoVal} onChange={e => setTasks(e.target.value)} />
+        <input type='text' {...register("description")} />
         <button type="submit" className="button" onClick={() => {
               addTask({id: ID, description: toDoVal, completed: false})
               setTasks("")
