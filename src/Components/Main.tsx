@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from "firebase/auth";
 import { Navbar } from '../Components/Nav';
-import { CollectionReference, DocumentData, addDoc, collection, getDocs } from "firebase/firestore";
+import { CollectionReference, DocumentData, addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../Config/firebase";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -26,10 +26,9 @@ export const Main = () => {
     navigate('/')
   }
 
-  const {addTask, removeTask, completeTask} = useTasks();
-  const [toDoVal, setTasks] = useState<string>("")
   let ID = uuid()
   const [tasksList, setTasksList] = useState<Task[] | null>(null)
+  
   const tasksRef = collection(db, "todos");
 
   const schema = yup.object().shape({
@@ -57,6 +56,15 @@ export const Main = () => {
           data.docs.map((doc) => ({...doc.data(), id: doc.id})) as Task[]
       )
   }
+
+  const removeTask = async (item: Task) => {
+    await deleteDoc(doc(db, "todos", item.id));
+  }
+
+  const completeTask = async (item: Task) => {
+    await updateDoc(doc(db, "todos", item.id), {complete: !item.completed})
+  }
+
   useEffect(() => {
       getTasks()
   }, [tasksList])
@@ -69,10 +77,7 @@ export const Main = () => {
     <div className="bodyContainer">
       <form className="taskForm" onSubmit={handleSubmit(onCreateTask)}>
         <input type='text' {...register("description")} />
-        <button type="submit" className="button" onClick={() => {
-              addTask({id: ID, description: toDoVal, completed: false})
-              setTasks("")
-            }}>Create</button>
+        <button type="submit" className="button">Create</button>
       </form>
       <div className="tasksContainer">
         {tasksList?.map((item) => (
