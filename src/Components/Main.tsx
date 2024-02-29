@@ -25,12 +25,8 @@ export const Main = () => {
     console.log("not logged")
     navigate('/')
   }
-
-  let ID = uuid()
   const [tasksList, setTasksList] = useState<Task[] | null>(null)
-  
   const tasksRef = collection(db, "todos");
-
   const schema = yup.object().shape({
       description: yup.string().min(1).required("You must add a description")
   });
@@ -62,7 +58,9 @@ export const Main = () => {
   }
 
   const completeTask = async (item: Task) => {
-    await updateDoc(doc(db, "todos", item.id), {complete: !item.completed})
+    await updateDoc(doc(db, "todos", item.id),{
+        completed: !item.completed
+      })
   }
 
   useEffect(() => {
